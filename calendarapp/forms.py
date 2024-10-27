@@ -48,15 +48,8 @@ class EventForm(ModelForm):
     #         field.widget.attrs['class'] = 'form-control'
 
 
-class AddMemberForm(forms.ModelForm):
-    class Meta:
-        model = TelegramUser
-        fields = ["telegram_id"]
-        # widgets = {
-        #     "telegram_id": forms.Select(
-        #
-        #     )
-        # }
+class AddMemberForm(forms.Form):
+    telegram_id = forms.CharField(max_length=100, label="Telegram ID")
 
 
 

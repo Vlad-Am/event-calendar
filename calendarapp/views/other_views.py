@@ -91,12 +91,11 @@ class EventEdit(generic.UpdateView):
 @login_required(login_url="signup")
 def event_details(request, event_id):
     event = Event.objects.get(id=event_id)
-    eventmember = EventMember.objects.filter(event=event)
-    context = {"event": event, "eventmember": eventmember}
+    eventmembers = event.participants.all()
+    context = {"event": event, "eventmember": eventmembers}
     return render(request, "event-details.html", context)
 
 
-@csrf_exempt
 def add_eventmember(request, event_id):
     forms = AddMemberForm()
     event = get_object_or_404(Event, id=event_id)
@@ -105,23 +104,24 @@ def add_eventmember(request, event_id):
         forms = AddMemberForm(request.POST)
         if forms.is_valid():
             telegram_id = forms.cleaned_data["telegram_id"]
-
             try:
                 with transaction.atomic():
-                    # Получаем существующего пользователя TelegramUser или создаем нового
-                    telegram_user, created = TelegramUser.objects.get_or_create(
-                        telegram_id=telegram_id,
-                    )
+                    # Получаем существующего пользователя TelegramUser
+                    telegram_user = TelegramUser.objects.get(telegram_id=telegram_id)
 
                     # Проверяем, не превышен ли лимит участников
                     if event.participants.count() < event.max_participants:
-                        # Добавляем пользователя к событию
-                        event.participants.add(telegram_user)
-                        # Обновляем количество участников
-                        event.save()
-                        return redirect("calendarapp:event_details", event_id=event.id)
+                        # Добавляем пользователя к событию, если он еще не добавлен
+                        if telegram_user not in event.participants.all():
+                            event.participants.add(telegram_user)
+                            event.save()
+                            return redirect("calendarapp:event-detail", event_id=event.id)
+                        else:
+                            forms.add_error(None, "Этот пользователь уже добавлен к событию.")
                     else:
                         forms.add_error(None, "Достигнут максимум участников для этого события.")
+            except TelegramUser.DoesNotExist:
+                forms.add_error(None, "Пользователь с таким Telegram ID не найден.")
             except Exception as e:
                 forms.add_error(None, f"Произошла ошибка при добавлении участника: {str(e)}")
 
