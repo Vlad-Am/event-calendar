@@ -5,6 +5,7 @@ from django.urls import reverse
 from calendarapp.models import EventAbstract
 from accounts.models import User
 from sport.models.sport import NULLABLE
+from tg_users.models import TelegramUser
 
 
 class EventManager(models.Manager):
@@ -46,16 +47,22 @@ class EventManager(models.Manager):
 class Event(EventAbstract):
     """ Event model """
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name="events")
     trainer = models.ForeignKey(
-        "sport.Trainer", on_delete=models.SET_NULL, related_name="events", null=True
+        "sport.Trainer", on_delete=models.SET_NULL,
+        related_name="events", null=True
     )
     title = models.CharField(max_length=200)
     description = models.TextField(**NULLABLE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     direction = models.ForeignKey(
-        "sport.Direction", on_delete=models.SET_NULL, related_name="events", null=True
+        "sport.Direction", on_delete=models.SET_NULL,
+        related_name="events", null=True
+    )
+    participants = models.ManyToManyField(
+        TelegramUser, related_name="events"
     )
     max_participants = models.PositiveIntegerField(default=0, **NULLABLE)
 

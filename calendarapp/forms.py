@@ -2,7 +2,7 @@ from django.forms import ModelForm, DateInput
 from calendarapp.models import Event, EventMember
 from django import forms
 
-from sport.models import Trainer, Direction
+from tg_users.models import TelegramUser
 
 
 class EventForm(ModelForm):
@@ -29,7 +29,8 @@ class EventForm(ModelForm):
                 format="%Y-%m-%dT%H:%M",
             ),
             "max_participants": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Введите максимальное количество участников(опционально)"}
+                attrs={"class": "form-control",
+                       "placeholder": "Введите максимальное количество участников(опционально)"}
             ),
             "trainer": forms.Select(attrs={"class": "form-control"}),
             "direction": forms.Select(attrs={"class": "form-control"})
@@ -49,5 +50,13 @@ class EventForm(ModelForm):
 
 class AddMemberForm(forms.ModelForm):
     class Meta:
-        model = EventMember
-        fields = ["user"]
+        model = TelegramUser
+        fields = ["telegram_id"]
+        # widgets = {
+        #     "telegram_id": forms.Select(
+        #
+        #     )
+        # }
+
+
+

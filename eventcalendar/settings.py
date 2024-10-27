@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "calendarapp.apps.CalendarappConfig",
     "accounts.apps.AccountsConfig",
     "sport.apps.SportConfig",
+    "tg_users.apps.TgUsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,7 @@ USE_L10N = True
 
 USE_TZ = False
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

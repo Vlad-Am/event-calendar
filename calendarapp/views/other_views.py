@@ -1,5 +1,5 @@
 # cal/views.py
-
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -11,10 +11,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
+from tg_users.models import TelegramUser
 
 
 def get_date(req_day):
@@ -94,20 +96,36 @@ def event_details(request, event_id):
     return render(request, "event-details.html", context)
 
 
+@csrf_exempt
 def add_eventmember(request, event_id):
     forms = AddMemberForm()
+    event = get_object_or_404(Event, id=event_id)
+
     if request.method == "POST":
         forms = AddMemberForm(request.POST)
         if forms.is_valid():
-            member = EventMember.objects.filter(event=event_id)
-            event = Event.objects.get(id=event_id)
-            if member.count() <= 9:
-                user = forms.cleaned_data["user"]
-                EventMember.objects.create(event=event, user=user)
-                return redirect("calendarapp:calendar")
-            else:
-                print("--------------User limit exceed!-----------------")
-    context = {"form": forms}
+            telegram_id = forms.cleaned_data["telegram_id"]
+
+            try:
+                with transaction.atomic():
+                    # Получаем существующего пользователя TelegramUser или создаем нового
+                    telegram_user, created = TelegramUser.objects.get_or_create(
+                        telegram_id=telegram_id,
+                    )
+
+                    # Проверяем, не превышен ли лимит участников
+                    if event.participants.count() < event.max_participants:
+                        # Добавляем пользователя к событию
+                        event.participants.add(telegram_user)
+                        # Обновляем количество участников
+                        event.save()
+                        return redirect("calendarapp:event_details", event_id=event.id)
+                    else:
+                        forms.add_error(None, "Достигнут максимум участников для этого события.")
+            except Exception as e:
+                forms.add_error(None, f"Произошла ошибка при добавлении участника: {str(e)}")
+
+    context = {"form": forms, "event": event}
     return render(request, "add_member.html", context)
 
 
