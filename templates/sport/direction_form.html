@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Редактировать направление{% else %}Создать направление{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{% if form.instance.pk %}Редактировать направление{% else %}Создать направление{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">{% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}</button>
+        <a href="{% url 'sport:direction_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

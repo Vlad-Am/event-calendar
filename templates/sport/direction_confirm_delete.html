@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Удалить направление{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Удалить направление</h1>
+    <p>Вы уверены, что хотите удалить направление "{{ direction.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a href="{% url 'sport:direction_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -8,7 +8,8 @@ from tg_users.models import TelegramUser
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = ["title", "description", "start_time", "end_time", "trainer", "max_participants", "direction"]
+        fields = ["title", "description", "start_time", "end_time",
+                  "trainer", "max_participants", "direction", "participants"]
         # datetime-local is a HTML5 input type
         widgets = {
             "title": forms.TextInput(
@@ -33,7 +34,8 @@ class EventForm(ModelForm):
                        "placeholder": "Введите максимальное количество участников(опционально)"}
             ),
             "trainer": forms.Select(attrs={"class": "form-control"}),
-            "direction": forms.Select(attrs={"class": "form-control"})
+            "direction": forms.Select(attrs={"class": "form-control"}),
+            "participants": forms.SelectMultiple(attrs={"class": "form-control"}),
         }
         exclude = ["user"]
 

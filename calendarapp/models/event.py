@@ -62,7 +62,7 @@ class Event(EventAbstract):
         related_name="events", null=True
     )
     participants = models.ManyToManyField(
-        TelegramUser, related_name="events"
+        "tg_users.TelegramUser", related_name="events", blank=True
     )
     max_participants = models.PositiveIntegerField(default=0, **NULLABLE)
 

@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Список направлений{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Список направлений</h1>
+    <a href="{% url 'sport:direction_add' %}" class="btn btn-primary mb-4">Добавить направление</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for direction in directions %}
+        <tr>
+            <td>{{ direction.name }}</td>
+            <td>{{ direction.description }}</td>
+            <td>
+                <a href="{% url 'sport:direction_edit' direction.id %}" class="btn btn-primary btn-sm">Редактировать</a>
+                <a href="{% url 'sport:direction_delete' direction.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

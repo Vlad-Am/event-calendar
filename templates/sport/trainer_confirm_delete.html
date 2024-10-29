@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Удалить тренера
+{% endblock %}
+
+{% block content %}
+<h1>Вы уверены, что хотите удалить тренера "{{ object.name }}"?</h1>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a href="{% url 'sport:trainer_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

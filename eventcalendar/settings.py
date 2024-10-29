@@ -1,20 +1,14 @@
-
 import os
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
 
 DEBUG = True
-#DEBUG = False
-DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
+# DEBUG = False
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ALLOWED_HOSTS = ["*"]
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -59,34 +53,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "eventcalendar.wsgi.application"
 
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
-
-
-##CONECTAR CON POSTGRES
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'calendar_db',
-        'USER': 'user',
-        'PASSWORD': '!!UZH_CNSP24_CALENDAR!!',
-        'HOST': 'calendar-db',
-        'DATABASE_PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+##CONECTAR CON POSTGRES
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'calendar_db',
+#         'USER': 'user',
+#         'PASSWORD': '!!UZH_CNSP24_CALENDAR!!',
+#         'HOST': 'calendar-db',
+#         'DATABASE_PORT': '5432',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation."
-        "UserAttributeSimilarityValidator"
+                "UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation." "MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation." "CommonPasswordValidator"},
@@ -94,9 +83,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "accounts.User"
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = "ru-ru"
 
@@ -110,18 +96,14 @@ USE_TZ = False
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
 """
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 """
 
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-#STATIC_ROOT=os.path.join(BASE_DIR, 'static/')
 
-#
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') # 'data' is my media folder
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

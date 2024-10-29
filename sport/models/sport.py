@@ -8,6 +8,7 @@ class Trainer(models.Model):
     direction = models.ManyToManyField('Direction', related_name='trainers')
     qualification = models.TextField(verbose_name="Квалификация", **NULLABLE)
     achievements = models.TextField(verbose_name="Достижения", **NULLABLE)
+    photo = models.ImageField(upload_to='photos/', verbose_name="Фото", **NULLABLE)
 
     def __str__(self):
         return self.name

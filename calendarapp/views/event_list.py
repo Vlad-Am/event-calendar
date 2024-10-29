@@ -35,8 +35,15 @@ class RunningEventsListView(EventsListView):
 class UpcomingEventsListView(EventsListView):
     """ Upcoming events list view """
 
+    template_name = "calendarapp/upcoming_events_list.html"
+
     def get_queryset(self):
         return Event.objects.get_upcoming_events(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['upcoming_events'] = self.get_queryset()
+        return context
 
 
 class CompletedEventsListView(EventsListView):

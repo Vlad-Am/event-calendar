@@ -84,7 +84,7 @@ def create_event(request):
 
 class EventEdit(generic.UpdateView):
     model = Event
-    fields = ["title", "description", "trainer", "direction", "max_participants", "start_time", "end_time"]
+    form_class = EventForm
     template_name = "event.html"
 
 

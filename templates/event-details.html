@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 
 {% block title %}
-Детали События
+Детали События {{ event.title }}
 {% endblock %}
 
 {% block content %}
@@ -17,6 +17,9 @@
                 style="color: gray;">{{ event.end_time }}</span></p>
         <hr>
         <p>{{ event.description }}</p>
+        <hr>
+        <p>Количество участников: {{ eventmember.count }}</p>
+        <p>Тренер: {{  event.trainer }}</p>
     </div>
     <hr>
     <div class="clearfix">
