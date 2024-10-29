@@ -1,8 +1,14 @@
 from django.forms import ModelForm, DateInput
-from calendarapp.models import Event, EventMember
+from calendarapp.models import Event
 from django import forms
+from django_select2 import forms as s2forms
 
-from tg_users.models import TelegramUser
+
+class ParticipantsWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        "telegram_id__icontains",
+        "full_name__icontains",
+    ]
 
 
 class EventForm(ModelForm):
@@ -35,7 +41,7 @@ class EventForm(ModelForm):
             ),
             "trainer": forms.Select(attrs={"class": "form-control"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "participants": forms.SelectMultiple(attrs={"class": "form-control"}),
+            "participants": ParticipantsWidget(attrs={"class": "form-control"}),
         }
         exclude = ["user"]
 
@@ -44,14 +50,7 @@ class EventForm(ModelForm):
         # input_formats to parse HTML5 datetime-local input to datetime field
         self.fields["start_time"].input_formats = ("%Y-%m-%dT%H:%M",)
         self.fields["end_time"].input_formats = ("%Y-%m-%dT%H:%M",)
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     for field in self.fields.values():
-    #         field.widget.attrs['class'] = 'form-control'
 
 
 class AddMemberForm(forms.Form):
     telegram_id = forms.CharField(max_length=100, label="Telegram ID")
-
-
-

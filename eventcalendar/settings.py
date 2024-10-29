@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "sport.apps.SportConfig",
     "tg_users.apps.TgUsersConfig",
+    'django_select2',
 ]
 
 MIDDLEWARE = [

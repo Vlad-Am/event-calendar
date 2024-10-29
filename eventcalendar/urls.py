@@ -14,6 +14,7 @@ urlpatterns = [
     path("", include("calendarapp.urls")),
     path("sport/", include("sport.urls", namespace="sport")),
     path('api/tg_users/', include('tg_users.urls')),
+    path("select2/", include("django_select2.urls")),
 ]
 
 if settings.DEBUG:
