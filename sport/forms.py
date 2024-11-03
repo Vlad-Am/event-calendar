@@ -3,17 +3,19 @@ from .models import Trainer, Direction
 
 
 class TrainerForm(forms.ModelForm):
+    qualification = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}))
+    achievements = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            if 'class' not in field.widget.attrs:
+                field.widget.attrs['class'] = 'form-control'
 
         self.fields['name'].label = "ФИО"
         self.fields['qualification'].label = "Квалификация"
         self.fields['achievements'].label = "Достижения"
         self.fields['direction'].label = "Направление"
-        self.fields['direction'].empty_label = "Выберите направление"
 
     class Meta:
         model = Trainer
