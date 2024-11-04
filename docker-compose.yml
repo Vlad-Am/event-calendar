@@ -19,6 +19,8 @@ services:
     
     depends_on:
       - db
+    networks:
+      - my_shared_network
   
 
   db:
@@ -35,7 +37,14 @@ services:
 
     volumes:
       - db_data:/var/lib/postgresql/data  # pesistantly store the data even when the docker is deleted or stopped
-  
+
+    networks:
+      - my_shared_network
+
+networks:
+  my_shared_network:
+    external: true
+
 volumes:
  db_data:
 
