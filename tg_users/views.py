@@ -1,11 +1,14 @@
 from django.contrib.auth.hashers import make_password
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import User
+from calendarapp.models import Event
 from .models import TelegramUser
-from .serializers import TelegramUserSerializer
+from .serializers import TelegramUserSerializer, EventSerializer
 
 
 class CreateTelegramUser(APIView):
@@ -51,3 +54,38 @@ class CreateTelegramUser(APIView):
         user = TelegramUser.objects.get(pk=pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@csrf_exempt
+@api_view(['GET'])
+def check_existing_user_by_tg(request, tg_id):
+    """
+    Check if Telegram user with given telegram_id already exists.
+    """
+    telegram_user = TelegramUser.objects.filter(telegram_id=tg_id).first()
+    if telegram_user:
+        return Response({'exists': True}, status=status.HTTP_200_OK)
+    else:
+        return Response({'exists': False}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def cancel_event_registration(request, event_id, tg_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        user = User.objects.get(telegram_id=tg_id)
+        if user in event.participants.all():
+            event.participants.remove(user)
+            return Response({"message": "Запись на тренировку успешно отменена"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Вы не записаны на эту тренировку"}, status=status.HTTP_400_BAD_REQUEST)
+    except Event.DoesNotExist:
+        return Response({"error": "Мероприятие не найдено"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_user_events(request, tg_id):
+    user = User.objects.get(telegram_id=tg_id)
+    events = Event.objects.filter(participants=user)
+    serializer = EventSerializer(events, many=True)
+    return Response(serializer.data)

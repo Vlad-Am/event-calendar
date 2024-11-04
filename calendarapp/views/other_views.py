@@ -96,7 +96,9 @@ def event_details(request, event_id):
     return render(request, "event-details.html", context)
 
 
+@csrf_exempt
 def add_eventmember(request, event_id):
+    """Ручка позволяющая добавить участника к событию по Телеграм ID."""
     forms = AddMemberForm()
     event = get_object_or_404(Event, id=event_id)
 
@@ -120,8 +122,6 @@ def add_eventmember(request, event_id):
                             forms.add_error(None, "Этот пользователь уже добавлен к событию.")
                     else:
                         forms.add_error(None, "Достигнут максимум участников для этого события.")
-            except TelegramUser.DoesNotExist:
-                forms.add_error(None, "Пользователь с таким Telegram ID не найден.")
             except Exception as e:
                 forms.add_error(None, f"Произошла ошибка при добавлении участника: {str(e)}")
 
