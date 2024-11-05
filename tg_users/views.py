@@ -8,8 +8,7 @@ from rest_framework.views import APIView
 from accounts.models import User
 from calendarapp.models import Event
 from .models import TelegramUser
-from .serializers import TelegramUserSerializer, EventSerializer, CheckExistingUserSerializer, \
-    CancelEventRegistrationSerializer, GetUserEventsSerializer
+from .serializers import TelegramUserSerializer, EventSerializer, EventMembersSerializer, MemberSerializer
 
 
 class CreateTelegramUser(APIView):
@@ -59,7 +58,7 @@ class CreateTelegramUser(APIView):
 
 class CheckExistingUserView(viewsets.ViewSet):
     def list(self, request):
-        serializer = CheckExistingUserSerializer(data=request.data)
+        serializer = MemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         tg_id = serializer.validated_data['tg_id']
         telegram_user = TelegramUser.objects.filter(telegram_id=tg_id).first()
@@ -69,7 +68,7 @@ class CheckExistingUserView(viewsets.ViewSet):
 class CancelEventRegistrationView(viewsets.ViewSet):
     def create(self, request):
         try:
-            serializer = CancelEventRegistrationSerializer(data=request.data)
+            serializer = EventMembersSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             event_id = serializer.validated_data['event_id']
             tg_id = serializer.validated_data['tg_id']
@@ -93,7 +92,7 @@ class CancelEventRegistrationView(viewsets.ViewSet):
 
 class GetUserEventsView(viewsets.ViewSet):
     def create(self, request):
-        serializer = GetUserEventsSerializer(data=request.data)
+        serializer = (MemberSerializer(data=request.data))
         serializer.is_valid(raise_exception=True)
         tg_id = serializer.validated_data['telegram_id']
         try:

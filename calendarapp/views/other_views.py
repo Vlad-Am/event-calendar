@@ -11,17 +11,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
-from calendarapp.forms import EventForm, AddMemberForm
+from calendarapp.forms import EventForm
 from tg_users.models import TelegramUser
-from tg_users.serializers import AddMemberSerializer
+from tg_users.serializers import MemberSerializer
 
 
 def get_date(req_day):
@@ -103,7 +102,7 @@ def event_details(request, event_id):
 
 class EventMemberView(APIView):
     def post(self, request, event_id):
-        serializer = AddMemberSerializer(data=request.data)
+        serializer = MemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         telegram_id = serializer.validated_data['telegram_id']
         event = get_object_or_404(Event, id=event_id)
@@ -122,39 +121,6 @@ class EventMemberView(APIView):
             return Response({"error": "Пользователь с таким Telegram ID не найден."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": f"Произошла ошибка при добавлении участника: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-#
-#
-# @api_view(['POST'])
-# def add_eventmember(request, event_id):
-#     event = get_object_or_404(Event, id=event_id)
-#     if request.method == "POST":
-#         form = AddMemberForm(request.POST)
-#         print("POST data:", request)
-#         print("POST data:", request.POST)
-#         print(form.is_valid())
-#         if form.is_valid():
-#             telegram_id = form.cleaned_data["telegram_id"]
-#             try:
-#                 with transaction.atomic():
-#                     telegram_user = TelegramUser.objects.get(telegram_id=telegram_id)
-#                     if event.participants.count() < event.max_participants:
-#                         if telegram_user not in event.participants.all():
-#                             event.participants.add(telegram_user)
-#                             return redirect("calendarapp:event-detail", event_id=event.id)
-#                         else:
-#                             form.add_error(None, "Этот пользователь уже добавлен к событию.")
-#                     else:
-#                         form.add_error(None, "Достигнут максимум участников для этого события.")
-#             except TelegramUser.DoesNotExist:
-#                 form.add_error("telegram_id", "Пользователь с таким Telegram ID не найден.")
-#             except Exception as e:
-#                 form.add_error(None, f"Произошла ошибка при добавлении участника: {str(e)}")
-#     else:
-#         form = AddMemberForm()
-#
-#     context = {"form": form, "event": event}
-#     return render(request, "add_member.html", context)
-
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
