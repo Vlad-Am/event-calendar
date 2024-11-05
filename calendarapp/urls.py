@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views.other_views import EventMemberView
 
 app_name = "calendarapp"
 
@@ -19,6 +20,7 @@ urlpatterns = [
     path("upcoming-event-list/", views.UpcomingEventsListView.as_view(), name="upcoming_events"),
     path("completed-event-list/", views.CompletedEventsListView.as_view(), name="completed_events"),
     # Ручки для ТГ
-    path("add_eventmember/<int:event_id>/", views.add_eventmember, name="add_eventmember"),
+    # path("add_eventmember/<int:event_id>/", views.add_eventmember, name="add_eventmember"),
+    path("add_eventmember/<int:event_id>/", EventMemberView.as_view(), name="add_eventmember"),  # AddMemberView
 
 ]

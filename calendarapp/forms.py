@@ -1,3 +1,5 @@
+import json
+
 from django.forms import ModelForm, DateInput
 from calendarapp.models import Event
 from django import forms
@@ -53,4 +55,14 @@ class EventForm(ModelForm):
 
 
 class AddMemberForm(forms.Form):
-    telegram_id = forms.CharField(max_length=100, label="Telegram ID")
+    telegram_id = forms.IntegerField()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        try:
+            # Попытка обработки JSON, если данные пришли в формате JSON
+            data = json.loads(self.data.get('telegram_id', '{}'))
+            cleaned_data['telegram_id'] = data.get('telegram_id')
+        except json.JSONDecodeError:
+            pass  # Обработка как обычная форма
+        return cleaned_data

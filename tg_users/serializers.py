@@ -14,3 +14,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['id', 'title', 'description', 'participants', 'start_time', 'end_time', 'trainer', 'direction']
+
+
+class AddMemberSerializer(serializers.Serializer):
+    telegram_id = serializers.CharField()
