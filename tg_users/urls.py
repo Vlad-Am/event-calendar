@@ -1,15 +1,16 @@
 from django.urls import path
+from rest_framework import routers
 
 from .apps import TgUsersConfig
-from .views import CreateTelegramUser, check_existing_user_by_tg, cancel_event_registration, get_user_events
+from .views import CreateTelegramUser, CheckExistingUserView, CancelEventRegistrationView, GetUserEventsView
 
 app_name = TgUsersConfig.name
 
-urlpatterns = [
-    path('create/', CreateTelegramUser.as_view(), name='create_telegram_user'),
-    path('check_existing_user/<str:tg_id>/', check_existing_user_by_tg, name="check_existing"),
-    path('cancel_registration/<int:event_id>/<str:tg_id>/',
-         cancel_event_registration, name="cancel_registration"),
-    path('user_events/<str:tg_id>/', get_user_events, name="user_events"),
+router = routers.DefaultRouter()
+router.register(r'check_existing_user', CheckExistingUserView, basename='check_existing_user')
+router.register(r'cancel_registration', CancelEventRegistrationView, basename='cancel_registration')
+router.register(r'user_events', GetUserEventsView, basename='user_events')
 
-]
+urlpatterns = [
+                  path('create/', CreateTelegramUser.as_view(), name='create_telegram_user'),
+              ] + router.urls

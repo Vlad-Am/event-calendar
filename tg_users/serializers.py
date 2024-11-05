@@ -18,3 +18,16 @@ class EventSerializer(serializers.ModelSerializer):
 
 class AddMemberSerializer(serializers.Serializer):
     telegram_id = serializers.CharField()
+
+
+class CheckExistingUserSerializer(serializers.Serializer):
+    telegram_id = serializers.CharField()
+
+
+class CancelEventRegistrationSerializer(serializers.Serializer):
+    telegram_id = serializers.CharField()
+    event_id = serializers.IntegerField()
+
+
+class GetUserEventsSerializer(serializers.Serializer):
+    telegram_id = serializers.CharField()
