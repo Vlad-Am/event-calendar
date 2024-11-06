@@ -72,11 +72,9 @@ class CancelEventRegistrationView(viewsets.ViewSet):
             serializer.is_valid(raise_exception=True)
             event_id = serializer.validated_data['event_id']
             tg_id = serializer.validated_data['tg_id']
-            print(event_id, tg_id)
             event = Event.objects.get(id=event_id)
-            print(event)
             user = TelegramUser.objects.get(telegram_id=tg_id)
-            print(user)
+
             if user in event.participants.all():
                 event.participants.remove(user)
                 return Response({"message": "Запись на тренировку успешно отменена"}, status=status.HTTP_200_OK)
