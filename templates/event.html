@@ -3,27 +3,67 @@
 {% block title %}
 Event
 {% endblock %}
+
 {% block extracss %}
 {{ form.media.css }}
 {% endblock extracss %}
 
 {% block content %}
-<div class="clearfix">
-    <a class="btn btn-info left" href="{% url 'calendarapp:calendar' %}"> Календарь </a>
-</div>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">{% if form.instance.pk %}Редактировать мероприятие{% else %}Добавить мероприятие{% endif %}</h1>
+    <div class="clearfix">
+        <a class="btn btn-info left" href="{% url 'calendarapp:calendar' %}">Календарь</a>
+    </div>
 
-<form method="post">
-    {% csrf_token %}
-    <table class="form form-table">
-        {{ form.as_p }}
-        <tr>
-            <td colspan="2">
-                <button type="submit" class="btn btn-info right"> Отправить</button>
-            </td>
-        </tr>
-    </table>
-</form>
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success">{% if form.instance.pk %}Сохранить{% else %}Добавить{% endif %}</button>
+            <a href="{% url 'calendarapp:calendar' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
+
 {% block extrascripts %}
 {{ form.media.js }}
-{% endblock extrascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Код для автоматического расширения текстовых полей
+    const tx = document.getElementsByTagName('textarea');
+    for (let i = 0; i < tx.length; i++) {
+        if (tx[i].classList.contains('auto-expand')) {
+            tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+            tx[i].addEventListener("input", OnInput, false);
+        }
+    }
+
+    function OnInput() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    }
+
+    // Код для отображения имени выбранного файла
+    const fileInput = document.querySelector('.custom-file-input');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    }
+});
+</script>
+{% endblock %}
