@@ -5,7 +5,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 class Trainer(models.Model):
     name = models.CharField(max_length=100, verbose_name='ФИО')
-    direction = models.ManyToManyField('Direction', related_name='trainers')
+    direction = models.ManyToManyField('Direction', related_name='trainer_directions')
     qualification = models.TextField(verbose_name="Квалификация", **NULLABLE)
     achievements = models.TextField(verbose_name="Достижения", **NULLABLE)
     photo = models.ImageField(upload_to='photos/', verbose_name="Фото", **NULLABLE)
@@ -21,6 +21,7 @@ class Trainer(models.Model):
 
 class Direction(models.Model):
     name = models.CharField(max_length=100)
+    trainers = models.ManyToManyField(Trainer, related_name='directions', blank=True)
 
     def __str__(self):
         return self.name

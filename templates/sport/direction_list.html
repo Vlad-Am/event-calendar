@@ -1,3 +1,4 @@
+<!-- templates/sport/direction_list.html -->
 {% extends 'base/base.html' %}
 
 {% block title %}Список направлений{% endblock %}
@@ -11,6 +12,7 @@
         <tr>
             <th>Название</th>
             <th>Описание</th>
+            <th>Тренеры</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -20,6 +22,15 @@
             <td>{{ direction.name }}</td>
             <td>{{ direction.description }}</td>
             <td>
+                <div class="trainers-list">
+                    {% for trainer in direction.trainers.all %}
+                        <div>{{ trainer.name }}</div>
+                    {% empty %}
+                        <div>Нет тренеров</div>
+                    {% endfor %}
+                </div>
+            </td>
+            <td>
                 <a href="{% url 'sport:direction_edit' direction.id %}" class="btn btn-primary btn-sm">Редактировать</a>
                 <a href="{% url 'sport:direction_delete' direction.pk %}" class="btn btn-danger btn-sm">Удалить</a>
             </td>
@@ -28,4 +39,15 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .trainers-list {
+        max-height: 100px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+</style>
 {% endblock %}

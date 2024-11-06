@@ -15,6 +15,16 @@ class DirectionViewSet(viewsets.ModelViewSet):
     queryset = Direction.objects.all()
     serializer_class = DirectionSerializer
 
+    def create(self,  request, *args, **kwargs):
+        if request.method == 'POST':
+            form = DirectionForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('sport:direction_list')
+        else:
+            form = DirectionForm()
+        return render(request, 'sport/direction_form.html', {'form': form})
+
 
 def trainer_list(request):
     trainers = Trainer.objects.all()
@@ -62,6 +72,7 @@ def direction_create(request):
         form = DirectionForm(request.POST)
         if form.is_valid():
             form.save()
+            form.save_m2m()
             return redirect('sport:direction_list')
     else:
         form = DirectionForm()
@@ -74,6 +85,7 @@ def direction_update(request, pk):
         form = DirectionForm(request.POST, instance=direction)
         if form.is_valid():
             form.save()
+            form.save_m2m()
             return redirect('sport:direction_list')
     else:
         form = DirectionForm(instance=direction)
