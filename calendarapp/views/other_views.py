@@ -1,8 +1,8 @@
 # cal/views.py
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.views import generic
+from django.views import generic, View
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 import calendar
@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,7 +17,7 @@ from rest_framework.views import APIView
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
-from calendarapp.forms import EventForm
+from calendarapp.forms import EventForm, AddMemberForm
 from tg_users.models import TelegramUser
 from tg_users.serializers import MemberSerializer
 
@@ -114,18 +113,29 @@ class EventMemberView(APIView):
                         event.participants.add(telegram_user)
                         return Response({"message": "Участник добавлен"}, status=status.HTTP_201_CREATED)
                     else:
-                        return Response({"error": "Этот пользователь уже добавлен к событию."}, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({"error": "Этот пользователь уже добавлен к событию."},
+                                        status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"error": "Достигнут максимум участников для этого события."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Достигнут максимум участников для этого события."},
+                                    status=status.HTTP_400_BAD_REQUEST)
         except TelegramUser.DoesNotExist:
             return Response({"error": "Пользователь с таким Telegram ID не найден."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({"error": f"Произошла ошибка при добавлении участника: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": f"Произошла ошибка при добавлении участника: {str(e)}"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
     template_name = "event_delete.html"
     success_url = reverse_lazy("calendarapp:calendar")
+
+
+def remove_member(request, event_id, member_id):
+    event = get_object_or_404(Event, id=event_id)
+    member = get_object_or_404(TelegramUser, id=member_id)
+    event.participants.remove(member)
+    return redirect("calendarapp:event-detail", event_id=event_id)
 
 
 class CalendarViewNew(LoginRequiredMixin, generic.View):
@@ -148,6 +158,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                  "description": event.description,
                  "trainer": f"{event.trainer}",
                  "direction": event.direction.id,
+                 'participants_count': len(list(event.participants.all())),
                  "max_participants": event.max_participants,
                  }
             )

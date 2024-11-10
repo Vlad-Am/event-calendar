@@ -1,9 +1,12 @@
 import json
 
+from django.contrib.postgres.search import SearchVector
 from django.forms import ModelForm, DateInput
 from calendarapp.models import Event
 from django import forms
 from django_select2 import forms as s2forms
+
+from tg_users.models import TelegramUser
 
 
 class ParticipantsWidget(s2forms.ModelSelect2MultipleWidget):

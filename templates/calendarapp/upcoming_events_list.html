@@ -18,6 +18,7 @@
             <th scope="col">Название</th>
             <th scope="col">Описание</th>
             <th scope="col">Тренер</th>
+            <th scope="col">Участники</th>
             <th scope="col">Начало</th>
             <th scope="col">Окончание</th>
             <th scope="col" class="text-center">Редактирование</th>
@@ -29,6 +30,13 @@
             <td>{{ event.title }}</td>
             <td>{{ event.description }}</td>
             <td>{{ event.trainer }}</td>
+            <td>
+                {% for participant in event.participants.all %}
+                {{ participant.full_name }} - {{ participant.telegram_id }}<br>
+                {% empty %}
+                Нет участников
+                {% endfor %}
+            </td>
             <td>{{ event.start_time }}</td>
             <td>{{ event.end_time }}</td>
             <td class="text-center">

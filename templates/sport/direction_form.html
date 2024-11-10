@@ -22,23 +22,26 @@
 {% block content %}
 <div class="container mt-5">
     <div class="form-container">
-        <h1 class="form-title text-center">{% if form.instance.pk %}Редактировать направление{% else %}Создать направление{% endif %}</h1>
+        <h1 class="form-title text-center">{% if form.instance.pk %}Редактировать направление{% else %}Создать
+            направление{% endif %}</h1>
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             {% for field in form %}
-                <div class="form-group mb-3">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <div class="invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
+            <div class="form-group mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field}}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
             {% endfor %}
             <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-primary btn-lg">{% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}</button>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                </button>
                 <a href="{% url 'sport:direction_list' %}" class="btn btn-secondary btn-lg">Отмена</a>
             </div>
         </form>
@@ -48,12 +51,5 @@
 
 {% block extra_js %}
 {{ form.media.js }}
-<script>
-    $(document).ready(function() {
-        $('#id_trainers').select2({
-            placeholder: "Выберите тренеров",
-            allowClear: true
-        });
-    });
-</script>
+
 {% endblock extra_js %}

@@ -43,6 +43,12 @@ class EventManager(models.Manager):
         )
         return upcoming_events
 
+    def get_participants_of_event(self):
+        participants_list = []
+        for event in self.all():
+            participants_list.extend(event.participants.all())
+        return participants_list
+
 
 class Event(EventAbstract):
     """ Event model """
