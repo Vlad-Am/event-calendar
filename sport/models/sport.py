@@ -10,6 +10,9 @@ class Trainer(models.Model):
     achievements = models.TextField(verbose_name="Достижения", **NULLABLE)
     photo = models.ImageField(upload_to='photos/', verbose_name="Фото", **NULLABLE)
 
+    def get_directions_display(self):
+        return ", ".join([direction.name for direction in self.direction.all()])
+
     def __str__(self):
         return self.name
 
@@ -21,6 +24,7 @@ class Trainer(models.Model):
 
 class Direction(models.Model):
     name = models.CharField(max_length=100)
+    description = models.TextField(verbose_name='Описание', default='')
 
     def __str__(self):
         return self.name

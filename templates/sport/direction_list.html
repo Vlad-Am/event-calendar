@@ -18,7 +18,7 @@
         {% for direction in directions %}
         <tr>
             <td>{{ direction.name }}</td>
-            <td>{{ direction.description }}</td>
+            <td>{{ direction.description|linebreaksbr }}</td>
             <td>
                 <a href="{% url 'sport:direction_edit' direction.id %}" class="btn btn-primary btn-sm">Редактировать</a>
                 <a href="{% url 'sport:direction_delete' direction.pk %}" class="btn btn-danger btn-sm">Удалить</a>
