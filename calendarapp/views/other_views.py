@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
-from calendarapp.forms import EventForm, AddMemberForm
+from calendarapp.forms import EventForm
 from tg_users.models import TelegramUser
 from tg_users.serializers import MemberSerializer
 
@@ -89,6 +89,8 @@ class EventEdit(generic.UpdateView):
     model = Event
     form_class = EventForm
     template_name = "event.html"
+
+
 
 
 @login_required(login_url="signup")

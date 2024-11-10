@@ -7,6 +7,8 @@ from calendarapp.models import Event
 class EventsListView(ListView):
     template_name = "calendarapp/events_list.html"
     model = Event
+    paginate_by = 5
+    ordering = ['-created_at']  # Сортируем по дате создания в обратном порядке
 
     def render_to_response(self, context, **response_kwargs):
         # Проверяем, что запрос требует JSON
@@ -36,6 +38,11 @@ class UpcomingEventsListView(EventsListView):
     """ Upcoming events list view """
 
     template_name = "calendarapp/upcoming_events_list.html"
+    def paginate_queryset(self, queryset, page_size):
+        # Переопределяем функцию пагинации для включения тренеров
+        queryset = queryset.select_related('trainer')
+        return super().paginate_queryset(queryset, page_size)
+
 
     def get_queryset(self):
         return Event.objects.get_upcoming_events(user=self.request.user)

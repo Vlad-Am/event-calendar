@@ -66,16 +66,16 @@ class EventForm(ModelForm):
                 #  add form-control in widget
             self.fields[field].widget.attrs["class"] = "form-control"
 
-
-class AddMemberForm(forms.Form):
-    telegram_id = forms.IntegerField()
-
-    def clean(self):
-        cleaned_data = super().clean()
-        try:
-            # Попытка обработки JSON, если данные пришли в формате JSON
-            data = json.loads(self.data.get('telegram_id', '{}'))
-            cleaned_data['telegram_id'] = data.get('telegram_id')
-        except json.JSONDecodeError:
-            pass  # Обработка как обычная форма
-        return cleaned_data
+#
+# class AddMemberForm(forms.Form):
+#     telegram_id = forms.IntegerField()
+#
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         try:
+#             # Попытка обработки JSON, если данные пришли в формате JSON
+#             data = json.loads(self.data.get('telegram_id', '{}'))
+#             cleaned_data['telegram_id'] = data.get('telegram_id')
+#         except json.JSONDecodeError:
+#             pass  # Обработка как обычная форма
+#         return cleaned_data
