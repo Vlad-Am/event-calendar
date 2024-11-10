@@ -1,42 +1,47 @@
 {% extends 'base/base.html' %}
 
 {% block title %}
-    Предстоящие мероприятия
+Предстоящие мероприятия
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Предстоящие мероприятия</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Предстоящие мероприятия</h1>
 
-        <table class="table table-striped table-bordered">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Название</th>
-                    <th scope="col">Описание</th>
-                    <th scope="col">Тренер</th>
-                    <th scope="col">Начало</th>
-                    <th scope="col">Окончание</th>
-                    <th scope="col" class="text-center">Редактирование</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event in event_list %}
-                    <tr>
-                        <td>{{ event.title }}</td>
-                        <td>{{ event.description }}</td>
-                        <td>{{ event.trainer }}</td>
-                        <td>{{ event.start_time }}</td>
-                        <td>{{ event.end_time }}</td>
-                        <td class="text-center">
-                            <a href="{% url 'calendarapp:event_edit' pk=event.id %}" class="btn btn-warning btn-sm">Редактировать</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">Нет предстоящих мероприятий</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="mb-4">
+        <a href="{% url 'calendarapp:event_new' %}" class="btn btn-success">Добавить мероприятие</a>
     </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Тренер</th>
+            <th scope="col">Начало</th>
+            <th scope="col">Окончание</th>
+            <th scope="col" class="text-center">Редактирование</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in event_list %}
+        <tr>
+            <td>{{ event.title }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.trainer }}</td>
+            <td>{{ event.start_time }}</td>
+            <td>{{ event.end_time }}</td>
+            <td class="text-center">
+                <a href="{% url 'calendarapp:event_edit' pk=event.id %}"
+                   class="btn btn-warning btn-sm">Редактировать</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Нет предстоящих мероприятий</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
