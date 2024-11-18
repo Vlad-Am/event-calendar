@@ -12,6 +12,8 @@ class TrainerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.instance.pk: # Если это обновление, заполняем поле directions
+            self.fields['direction'].initial = self.instance.directions.all()
         for field_name, field in self.fields.items():
             if 'class' not in field.widget.attrs:
                 field.widget.attrs['class'] = 'form-control'
@@ -24,6 +26,20 @@ class TrainerForm(forms.ModelForm):
     class Meta:
         model = Trainer
         fields = '__all__'
+        widgets = {
+            'direction': Select2MultipleWidget,
+        }
+
+    # def save(self, commit=True):
+    #     trainer = super().save(commit=False)
+    #     if commit:
+    #         trainer.save()
+    #         # Удаляем все старые связи
+    #         trainer.directions.clear()
+    #         # Добавляем новые связи
+    #         trainer.direction.set(self.cleaned_data['direction'])
+    #         trainer.save()
+    #     return trainer
 
 
 class TrainerWidget(s2forms.ModelSelect2MultipleWidget):
@@ -33,13 +49,11 @@ class TrainerWidget(s2forms.ModelSelect2MultipleWidget):
         "achievements__icontains",
     ]
 
+
 class DirectionForm(ModelForm):
     class Meta:
         model = Direction
         fields = '__all__'
-        widgets = {
-            'trainers': TrainerWidget(attrs={'data-placeholder': 'Выберите тренеров...'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super(DirectionForm, self).__init__(*args, **kwargs)
@@ -49,11 +63,13 @@ class DirectionForm(ModelForm):
         self.fields['trainers'].label = "Тренеры"
 
         if self.instance.pk:
-            self.fields['trainers'].queryset = self.instance.trainers.all()
+            self.fields['trainers'].innitial = self.instance.trainers.all()
 
-    def save(self, commit=True):
-        direction = super().save(commit=False)
-        if commit:
-            direction.save()
-            self.save_m2m()
-        return direction
+    # def save(self, commit=True):
+    #     direction = super().save(commit=False)
+    #     if commit:
+    #         direction.save()
+    #         direction.trainers.set(self.cleaned_data['trainers'])
+    #         direction.save()
+
+        # return direction

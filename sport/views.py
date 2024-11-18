@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, UpdateView, CreateView, ListView
 from rest_framework import viewsets
 
 from .forms import TrainerForm, DirectionForm
@@ -15,86 +16,54 @@ class DirectionViewSet(viewsets.ModelViewSet):
     queryset = Direction.objects.all()
     serializer_class = DirectionSerializer
 
-    def create(self,  request, *args, **kwargs):
-        if request.method == 'POST':
-            form = DirectionForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('sport:direction_list')
-        else:
-            form = DirectionForm()
-        return render(request, 'sport/direction_form.html', {'form': form})
+
+class TrainerListView(ListView):
+    model = Trainer
+    template_name = 'sport/trainer_list.html'
+    context_object_name = 'trainers'
 
 
-def trainer_list(request):
-    trainers = Trainer.objects.all()
-    return render(request, 'sport/trainer_list.html', {'trainers': trainers})
+class TrainerCreateView(CreateView):
+    model = Trainer
+    form_class = TrainerForm
+    template_name = 'sport/trainer_form.html'
+    success_url = reverse_lazy('sport:trainer_list')
 
 
-def trainer_create(request):
-    if request.method == 'POST':
-        form = TrainerForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('sport:trainer_list')
-    else:
-        form = TrainerForm()
-    return render(request, 'sport/trainer_form.html', {'form': form})
+class TrainerUpdateView(UpdateView):
+    model = Trainer
+    form_class = TrainerForm
+    template_name = 'sport/trainer_form.html'
+    success_url = reverse_lazy('sport:trainer_list')
 
 
-def trainer_update(request, pk):
-    trainer = get_object_or_404(Trainer, pk=pk)
-    if request.method == 'POST':
-        form = TrainerForm(request.POST, instance=trainer)
-        if form.is_valid():
-            form.save()
-            return redirect('sport:trainer_list')
-    else:
-        form = TrainerForm(instance=trainer)
-    return render(request, 'sport/trainer_form.html', {'form': form})
+class TrainerDeleteView(DeleteView):
+    model = Trainer
+    template_name = 'sport/trainer_confirm_delete.html'
+    success_url = reverse_lazy('sport:trainer_list')
 
 
-def trainer_delete(request, pk):
-    trainer = get_object_or_404(Trainer, pk=pk)
-    if request.method == 'POST':
-        trainer.delete()
-        return redirect('sport:trainer_list')
-    return render(request, 'sport/trainer_confirm_delete.html', {'object': trainer})
+class DirectionListView(ListView):
+    model = Direction
+    template_name = 'sport/direction_list.html'
+    context_object_name = 'directions'
 
 
-def direction_list(request):
-    directions = Direction.objects.all()
-    return render(request, 'sport/direction_list.html', {'directions': directions})
+class DirectionCreateView(CreateView):
+    model = Direction
+    form_class = DirectionForm
+    template_name = 'sport/direction_form.html'
+    success_url = reverse_lazy('sport:direction_list')
 
 
-def direction_create(request):
-    if request.method == 'POST':
-        form = DirectionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form.save_m2m()
-            return redirect('sport:direction_list')
-    else:
-        form = DirectionForm()
-    return render(request, 'sport/direction_form.html', {'form': form})
+class DirectionUpdateView(UpdateView):
+    model = Direction
+    form_class = DirectionForm
+    template_name = 'sport/direction_form.html'
+    success_url = reverse_lazy('sport:direction_list')
 
 
-def direction_update(request, pk):
-    direction = get_object_or_404(Direction, pk=pk)
-    if request.method == 'POST':
-        form = DirectionForm(request.POST, instance=direction)
-        if form.is_valid():
-            form.save()
-            form.save_m2m()
-            return redirect('sport:direction_list')
-    else:
-        form = DirectionForm(instance=direction)
-    return render(request, 'sport/direction_form.html', {'form': form})
-
-
-def direction_delete(request, pk):
-    direction = get_object_or_404(Direction, pk=pk)
-    if request.method == 'POST':
-        direction.delete()
-        return redirect('sport:direction_list')
-    return render(request, 'sport/direction_confirm_delete.html', {'direction': direction})
+class DirectionDeleteView(DeleteView):
+    model = Direction
+    template_name = 'sport/direction_confirm_delete.html'
+    success_url = reverse_lazy('sport:direction_list')
