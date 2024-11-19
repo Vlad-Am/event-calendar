@@ -48,6 +48,18 @@ class DirectionListView(ListView):
     template_name = 'sport/direction_list.html'
     context_object_name = 'directions'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Создаем словарь направлений и их тренеров
+        direction_trainers = {}
+        for direction in context['directions']:
+            direction_trainers[direction] = direction.trainer_directions.all()
+        print(direction_trainers)
+        # Добавляем словарь в контекст
+        context['direction_trainers'] = direction_trainers
+        return context
+
 
 class DirectionCreateView(CreateView):
     model = Direction

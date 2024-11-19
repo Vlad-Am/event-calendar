@@ -12,8 +12,8 @@ class TrainerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.pk: # Если это обновление, заполняем поле directions
-            self.fields['direction'].initial = self.instance.directions.all()
+        if self.instance.pk:  # Если это обновление, заполняем поле directions
+            self.fields['direction'].initial = self.instance.direction.all()
         for field_name, field in self.fields.items():
             if 'class' not in field.widget.attrs:
                 field.widget.attrs['class'] = 'form-control'
@@ -42,7 +42,7 @@ class TrainerForm(forms.ModelForm):
     #     return trainer
 
 
-class TrainerWidget(s2forms.ModelSelect2MultipleWidget):
+class TrainerWidget(Select2MultipleWidget):
     search_fields = [
         "name__icontains",
         "qualification__icontains",
@@ -50,7 +50,14 @@ class TrainerWidget(s2forms.ModelSelect2MultipleWidget):
     ]
 
 
-class DirectionForm(ModelForm):
+class DirectionForm(forms.ModelForm):
+    trainer_directions = forms.ModelMultipleChoiceField(
+        queryset=Trainer.objects.all(),
+        widget=TrainerWidget,
+        required=False,
+        label="Тренеры"
+    )
+
     class Meta:
         model = Direction
         fields = '__all__'
@@ -60,16 +67,15 @@ class DirectionForm(ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
         self.fields['name'].label = "Название"
-        self.fields['trainers'].label = "Тренеры"
+        self.fields['trainer_directions'].label = "Тренеры"
 
         if self.instance.pk:
-            self.fields['trainers'].innitial = self.instance.trainers.all()
+            self.fields['trainer_directions'].initial = self.instance.trainer_directions.all()
 
-    # def save(self, commit=True):
-    #     direction = super().save(commit=False)
-    #     if commit:
-    #         direction.save()
-    #         direction.trainers.set(self.cleaned_data['trainers'])
-    #         direction.save()
-
-        # return direction
+    def save(self, commit=True):
+        instance = super(DirectionForm, self).save(commit=False)
+        if commit:
+            instance.save()
+            instance.trainer_directions.set(self.cleaned_data['trainer_directions'])
+            instance.save()
+        return instance

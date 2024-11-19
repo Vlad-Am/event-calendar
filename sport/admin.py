@@ -33,6 +33,6 @@ class DirectionAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
     def get_trainers(self, obj):
-        return ", ".join([trainer.name for trainer in obj.trainers.all()])
+        return ", ".join([trainer.name for trainer in obj.trainer_directions.all()])
 
     get_trainers.short_description = 'Trainers'
