@@ -1,5 +1,17 @@
 <!-- templates/sport/direction_list.html -->
 {% extends 'base/base.html' %}
+{% block extra_css %}
+<style>
+    .trainers-list {
+        max-height: 100px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+</style>
+{% endblock %}
+
+{% load custom_filters %}
 
 {% block title %}Список направлений{% endblock %}
 
@@ -11,7 +23,6 @@
         <thead>
         <tr>
             <th>Название</th>
-            <th>Описание</th>
             <th>Тренеры</th>
             <th>Действия</th>
         </tr>
@@ -20,14 +31,15 @@
         {% for direction in directions %}
         <tr>
             <td>{{ direction.name }}</td>
-            <td>{{ direction.description }}</td>
             <td>
                 <div class="trainers-list">
-                    {% for trainer in direction.trainers.all %}
-                        <div>{{ trainer.name }}</div>
-                    {% empty %}
-                        <div>Нет тренеров</div>
-                    {% endfor %}
+                    <ul>
+                        {% for trainer in direction_trainers|get_item:direction %}
+                        <li>{{ trainer.name }}</li>
+                        {% empty %}
+                        <li>Нет тренеров.</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </td>
             <td>
@@ -41,13 +53,3 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    .trainers-list {
-        max-height: 100px;
-        overflow-y: auto;
-        border: 1px solid #ddd;
-        padding: 5px;
-    }
-</style>
-{% endblock %}

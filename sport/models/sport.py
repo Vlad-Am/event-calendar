@@ -21,7 +21,6 @@ class Trainer(models.Model):
 
 class Direction(models.Model):
     name = models.CharField(max_length=100)
-    trainers = models.ManyToManyField(Trainer, related_name='directions', blank=True)
 
     def __str__(self):
         return self.name

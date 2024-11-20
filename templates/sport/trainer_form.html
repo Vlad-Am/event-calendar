@@ -61,35 +61,30 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Код для автоматического расширения текстовых полей
-    const tx = document.getElementsByTagName('textarea');
-    for (let i = 0; i < tx.length; i++) {
-        if (tx[i].classList.contains('auto-expand')) {
-            tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-            tx[i].addEventListener("input", OnInput, false);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Код для автоматического расширения текстовых полей
+        const tx = document.getElementsByTagName('textarea');
+        for (let i = 0; i < tx.length; i++) {
+            if (tx[i].classList.contains('auto-expand')) {
+                tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+                tx[i].addEventListener("input", OnInput, false);
+            }
         }
-    }
 
-    function OnInput() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    }
+        function OnInput() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        }
 
-    // Код для отображения имени выбранного файла
-    const fileInput = document.querySelector('.custom-file-input');
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const fileName = e.target.files[0].name;
-            const label = e.target.nextElementSibling;
-            label.textContent = fileName;
-        });
-    }
-        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
-        var fileName = e.target.files[0].name;
-        var nextSibling = e.target.nextElementSibling;
-        nextSibling.innerText = fileName;
+        // Код для отображения имени выбранного файла
+        const fileInput = document.querySelector('.custom-file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const fileName = e.target.files[0].name;
+                const label = e.target.nextElementSibling;
+                label.textContent = fileName;
+            });
+        };
     });
-});
 </script>
 {% endblock %}

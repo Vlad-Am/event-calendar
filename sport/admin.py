@@ -8,12 +8,17 @@ class TrainerAdmin(admin.ModelAdmin):
     model = Trainer
     list_display = [
         "id",
-        "qualification",
-        "achievements",
         "name",
-
+        "get_directions",
+        "qualification",
+        "achievements"
     ]
     search_fields = ["name"]
+
+    def get_directions(self, obj):
+        return ", ".join([direction.name for direction in obj.direction.all()])
+
+    get_directions.short_description = 'Directions'
 
 
 @admin.register(Direction)
@@ -22,6 +27,12 @@ class DirectionAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
+        "get_trainers"
     ]
 
     search_fields = ["name"]
+
+    def get_trainers(self, obj):
+        return ", ".join([trainer.name for trainer in obj.trainer_directions.all()])
+
+    get_trainers.short_description = 'Trainers'
