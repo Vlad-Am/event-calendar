@@ -40,8 +40,8 @@
         {% for member in eventmember %}
         <tr role="row">
             <td>{{ forloop.counter }}</td>
-            <td>{{ member.full_name }}</td>
-            <td>{{ member.telegram_id }}</td>
+            <td>{{ member.last_name }} {{ member.first_name }}</td>
+            <td>{{ member.tg_id }}</td>
             {% if member.is_subscribed %}
             <td> Есть подписка</td>
             {% else %}

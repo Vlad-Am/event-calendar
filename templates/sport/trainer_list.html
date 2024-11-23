@@ -36,7 +36,7 @@
 
             </td>
             <td>{{ trainer.qualification }}</td>
-            <td>{{ trainer.achievements }}</td>
+            <td>{{ trainer.achievements|linebreaksbr }}</td>
             <td>
                 {% if trainer.photo %}
                 <img src="{{ trainer.photo.url }}" alt="{{ trainer.name }}" class="img-thumbnail"

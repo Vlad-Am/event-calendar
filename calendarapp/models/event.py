@@ -1,10 +1,11 @@
 from datetime import datetime
 from django.db import models
+from django.db.models import Count
 from django.urls import reverse
 
 from calendarapp.models import EventAbstract
 from accounts.models import User
-from sport.models.sport import NULLABLE
+from sport.models.sport import NULLABLE, Direction
 from tg_users.models import TelegramUser
 
 
@@ -12,7 +13,8 @@ class EventManager(models.Manager):
     """ Event manager """
 
     def get_all_events(self, user):
-        events = Event.objects.filter(user=user, is_active=True, is_deleted=False)
+        events = (Event.objects.filter(user=user, is_active=True, is_deleted=False)
+                  .annotate(participants_count=Count('participants')))
         return events
 
     def get_running_events(self, user):
@@ -22,7 +24,7 @@ class EventManager(models.Manager):
             is_deleted=False,
             end_time__gte=datetime.now(),
             start_time__lte=datetime.now()
-        ).order_by("start_time")
+        ).annotate(participants_count=Count('participants')).order_by("start_time")
         return running_events
 
     def get_completed_events(self, user):
@@ -31,7 +33,7 @@ class EventManager(models.Manager):
             is_active=True,
             is_deleted=False,
             end_time__lt=datetime.now(),
-        )
+        ).annotate(participants_count=Count('participants'))
         return completed_events
 
     def get_upcoming_events(self, user):
@@ -40,8 +42,20 @@ class EventManager(models.Manager):
             is_active=True,
             is_deleted=False,
             start_time__gt=datetime.now(),
-        )
+        ).annotate(participants_count=Count('participants'))
         return upcoming_events
+
+    def get_directions_for_upcoming_events(self, user):
+        # Получаем направления с предстоящими событиями
+        upcoming_directions = Direction.objects.filter(
+            events__user=user,
+            events__is_active=True,
+            events__is_deleted=False,
+            events__start_time__gt=datetime.now()
+        ).distinct()
+        return upcoming_directions
+
+
 
 
 class Event(EventAbstract):

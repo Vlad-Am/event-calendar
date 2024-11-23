@@ -104,11 +104,11 @@ class EventMemberView(APIView):
     def post(self, request, event_id):
         serializer = MemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        telegram_id = serializer.validated_data['telegram_id']
+        tg_id = serializer.validated_data['tg_id']
         event = get_object_or_404(Event, id=event_id)
         try:
             with transaction.atomic():
-                telegram_user = TelegramUser.objects.get(telegram_id=telegram_id)
+                telegram_user = TelegramUser.objects.get(tg_id=tg_id)
                 if event.participants.count() < event.max_participants:
                     if telegram_user not in event.participants.all():
                         event.participants.add(telegram_user)
@@ -121,6 +121,7 @@ class EventMemberView(APIView):
             return Response({"error": "Пользователь с таким Telegram ID не найден."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": f"Произошла ошибка при добавлении участника: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
@@ -171,9 +172,9 @@ def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
         event.delete()
-        return JsonResponse({'message': 'Event success delete.'})
+        return JsonResponse({'message': 'Событие успешно удалено.'})
     else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        return JsonResponse({'message': 'Ошибка!'}, status=400)
 
 
 def next_week(request, event_id):
@@ -184,9 +185,9 @@ def next_week(request, event_id):
         next.start_time += timedelta(days=7)
         next.end_time += timedelta(days=7)
         next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        return JsonResponse({'message': 'Успешно!'})
     else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        return JsonResponse({'message': 'Ошибка!'}, status=400)
 
 
 def next_day(request, event_id):
@@ -197,9 +198,9 @@ def next_day(request, event_id):
         next.start_time += timedelta(days=1)
         next.end_time += timedelta(days=1)
         next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        return JsonResponse({'message': 'Успешно!'})
     else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        return JsonResponse({'message': 'Ошибка!'}, status=400)
 
 
 def copy_event(request, event_id):
@@ -216,6 +217,6 @@ def copy_event(request, event_id):
             end_time=event.end_time + request["end_time"],
         )
         new_event.save()
-        return JsonResponse({'message': 'Success!'})
+        return JsonResponse({'message': 'Успешно!'})
     else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        return JsonResponse({'message': 'Ошибка!'}, status=400)
