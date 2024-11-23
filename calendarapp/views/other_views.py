@@ -104,11 +104,11 @@ class EventMemberView(APIView):
     def post(self, request, event_id):
         serializer = MemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        telegram_id = serializer.validated_data['telegram_id']
+        tg_id = serializer.validated_data['tg_id']
         event = get_object_or_404(Event, id=event_id)
         try:
             with transaction.atomic():
-                telegram_user = TelegramUser.objects.get(telegram_id=telegram_id)
+                telegram_user = TelegramUser.objects.get(tg_id=tg_id)
                 if event.participants.count() < event.max_participants:
                     if telegram_user not in event.participants.all():
                         event.participants.add(telegram_user)
@@ -121,6 +121,7 @@ class EventMemberView(APIView):
             return Response({"error": "Пользователь с таким Telegram ID не найден."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": f"Произошла ошибка при добавлении участника: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember

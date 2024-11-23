@@ -17,7 +17,12 @@ urlpatterns = [
     path("event/<int:pk>/remove/", views.EventMemberDeleteView.as_view(), name="remove_event"),
     path("all-event-list/", views.AllEventsListView.as_view(), name="all_events"),
     path("running-event-list/", views.RunningEventsListView.as_view(), name="running_events"),
+
     path("upcoming-event-list/", views.UpcomingEventsListView.as_view(), name="upcoming_events"),
+    path("upcoming-event-list/<int:direction_id>/", views.UpcomingEventsListView.as_view(),
+         name="upcoming_events_by_direction"),
+    # path("upcoming-directions/", views.UpcomingDirectionsListView.as_view(), name="upcoming_directions"),
+
     path("completed-event-list/", views.CompletedEventsListView.as_view(), name="completed_events"),
     # Ручки для ТГ
     # path("add_eventmember/<int:event_id>/", views.add_eventmember, name="add_eventmember"),

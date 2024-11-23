@@ -8,8 +8,9 @@ from django_select2 import forms as s2forms
 
 class ParticipantsWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
-        "telegram_id__icontains",
-        "full_name__icontains",
+        "tg_id__icontains",
+        "first_name__icontains",
+        "last_name__icontains"
     ]
 
 
@@ -65,14 +66,14 @@ class EventForm(ModelForm):
 
 
 class AddMemberForm(forms.Form):
-    telegram_id = forms.IntegerField()
+    tg_id = forms.IntegerField()
 
     def clean(self):
         cleaned_data = super().clean()
         try:
             # Попытка обработки JSON, если данные пришли в формате JSON
-            data = json.loads(self.data.get('telegram_id', '{}'))
-            cleaned_data['telegram_id'] = data.get('telegram_id')
+            data = json.loads(self.data.get('tg_id', '{}'))
+            cleaned_data['tg_id'] = data.get('tg_id')
         except json.JSONDecodeError:
             pass  # Обработка как обычная форма
         return cleaned_data
