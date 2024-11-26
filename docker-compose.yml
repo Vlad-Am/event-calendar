@@ -8,7 +8,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Подключение конфигурации Nginx
       - static_volume:/usr/src/app/static  # Статические файлы
-#      - media_volume:/usr/src/app/media    # Медиа-файлы
+      - media_volume:/usr/src/app/media    # Медиа-файлы
     depends_on:
       - web
     networks:
@@ -26,6 +26,7 @@ services:
 
     volumes:
       - static_volume:/usr/src/app/static  # Хранение статических файлов
+      - media_volume:/usr/src/app/media    # Медиа-файлы
 
     environment:
       - DJANGO_SETTINGS_MODULE=eventcalendar.settings
@@ -68,4 +69,5 @@ networks:
 
 volumes:
   static_volume:  # Для статических файлов
+  media_volume:   # Для медиа-файлов
   db_data:        # Для данных базы
