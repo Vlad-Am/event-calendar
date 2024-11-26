@@ -21,7 +21,7 @@ services:
         condition: service_healthy
 
     networks:
-      - my_shared_network
+      - calendar_network
 
   db:
     container_name: calendar-db
@@ -46,10 +46,10 @@ services:
       retries: 10
 
     networks:
-      - my_shared_network
+      - calendar_network
 
 networks:
-  my_shared_network:
+  calendar_network:
     external: true
 
 volumes:
