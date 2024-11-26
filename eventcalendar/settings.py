@@ -10,7 +10,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '217.25.90.84', 'calendar-web', 'sambo-bot']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'http://217.25.90.84']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'http://217.25.90.84', 'http://calendar-web']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
