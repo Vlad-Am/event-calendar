@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.hashers import make_password
-from django.db.models import Count
+from django.db.models import Count, OuterRef, Subquery
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status, viewsets
@@ -105,9 +105,10 @@ class GetUpcomingUserEventsView(APIView):
         # Получаем пользователя с tg_id или возвращаем 404
         user = get_object_or_404(TelegramUser, tg_id=tg_id)
 
-        # Фильтруем события по участнику и времени
+        participant_counts = (Event.objects.filter(pk=OuterRef('pk'))
+                              .annotate(count=Count('participants')).values('count'))
         events = (Event.objects.filter(participants=user, start_time__gt=datetime.now())
-                  .annotate(participants_count=Count('participants')))
+                  .annotate(participants_count=Subquery(participant_counts)))
 
         # Сериализация и возврат данных
         serializer = EventSerializer(events, many=True)

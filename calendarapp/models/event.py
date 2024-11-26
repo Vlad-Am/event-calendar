@@ -56,8 +56,6 @@ class EventManager(models.Manager):
         return upcoming_directions
 
 
-
-
 class Event(EventAbstract):
     """ Event model """
 
