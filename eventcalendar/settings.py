@@ -4,11 +4,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
 
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '185.178.45.20']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'http://185.178.45.20']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -96,15 +98,8 @@ USE_L10N = True
 
 USE_TZ = False
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
-
-"""
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-"""
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = '/usr/src/app/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
