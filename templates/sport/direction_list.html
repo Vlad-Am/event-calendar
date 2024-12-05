@@ -23,6 +23,7 @@
         <thead>
         <tr>
             <th>Название</th>
+            <th>Описание</th>
             <th>Тренеры</th>
             <th>Действия</th>
         </tr>
@@ -31,6 +32,7 @@
         {% for direction in directions %}
         <tr>
             <td>{{ direction.name }}</td>
+            <td>{{ direction.description|linebreaksbr }}</td>
             <td>
                 <div class="trainers-list">
                     <ul>
@@ -52,4 +54,3 @@
     </table>
 </div>
 {% endblock %}
-

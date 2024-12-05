@@ -1,24 +1,29 @@
-
-
 # Official Python runtime
 FROM python:3.9-slim
 
-# Project work directorty
+# Установка зависимостей системы
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Рабочая директория приложения
 WORKDIR /usr/src/app
 
-# Copy the local project directory to the container
-COPY . .
+# Копируем зависимости в контейнер
+COPY requirements.txt .
 
-# Install module dependencies
+# Устанавливаем Python зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make migrations, as described in the install tutorial from the original repository
-# RUN python manage.py makemigrations && python manage.py migrate
+# Копируем проект в контейнер
+COPY . .
 
-# Expose the port for public access
-ENV DJANGO_DEV_SERVER_PORT 8000
-EXPOSE $DJANGO_DEV_SERVER_PORT
+# Собираем статические файлы
+RUN python manage.py collectstatic --noinput
 
-# Set the default command to run the Django dev server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Открываем порт для приложения
+EXPOSE 8000
 
+# Команда для запуска Gunicorn
+CMD ["gunicorn", "eventcalendar.wsgi:application", "--bind", "0.0.0.0:8000"]

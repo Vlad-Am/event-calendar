@@ -8,7 +8,8 @@ from django_select2 import forms as s2forms
 
 class TrainerForm(forms.ModelForm):
     qualification = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}))
-    achievements = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}))
+    achievements = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}),
+                                   required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -67,6 +68,7 @@ class DirectionForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
         self.fields['name'].label = "Название"
+        self.fields['description'].label = "Описание"
         self.fields['trainer_directions'].label = "Тренеры"
 
         if self.instance.pk:

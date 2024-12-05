@@ -7,11 +7,11 @@ from sport.views import TrainerViewSet, DirectionViewSet
 app_name = SportConfig.name
 
 router = DefaultRouter()
-# router.register(r'trainers', TrainerViewSet)
-# router.register(r'directions', DirectionViewSet)
+router.register(r'trainers', TrainerViewSet)
+router.register(r'directions', DirectionViewSet)
 
 urlpatterns = [
-    # path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
     path('trainers/', views.TrainerListView.as_view(), name='trainer_list'),
     path('trainers/create/', views.TrainerCreateView.as_view(), name='trainer_add'),
     path('trainers/update/<int:pk>/', views.TrainerUpdateView.as_view(), name='trainer_edit'),

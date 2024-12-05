@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_("Active"), default=True)
     date_joined = models.DateTimeField(_("Date Joined"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
-    telegram_id = models.CharField(_("Telegram ID"), max_length=255, null=True, blank=True)
+    tg_id = models.CharField(_("Telegram ID"), max_length=255, null=True, blank=True)
 
     objects = UserManager()
 

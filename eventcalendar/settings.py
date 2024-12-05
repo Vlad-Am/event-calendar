@@ -4,11 +4,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
 
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '217.25.90.84', 'calendar-web', 'sambo-bot', 'calendar-nginx']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'http://217.25.90.84', 'http://calendar-web',
+                        'http://calendar-nginx']
+
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+USE_X_FORWARDED_HOST = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -55,24 +64,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "eventcalendar.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
-
-##CONECTAR CON POSTGRES
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'calendar_db',
-#         'USER': 'user',
-#         'PASSWORD': '!!UZH_CNSP24_CALENDAR!!',
-#         'HOST': 'calendar-db',
-#         'DATABASE_PORT': '5432',
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
 #     }
 # }
+
+#CONECTAR CON POSTGRES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'calendar_db',
+        'USER': 'user',
+        'PASSWORD': '!!UZH_CNSP24_CALENDAR!!',
+        'HOST': 'calendar-db',
+        'DATABASE_PORT': '5432',
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -96,15 +105,11 @@ USE_L10N = True
 
 USE_TZ = False
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
-
-"""
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-"""
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = '/usr/src/app/static/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_URL = 'http://calendar-nginx/media/'
+MEDIA_URL = 'http://217.25.90.84/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/usr/src/app/media'
