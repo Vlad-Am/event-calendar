@@ -19,7 +19,7 @@ services:
     build: .  # build the docker, using the dockerfile in current dir
 
     command: >
-      sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py csu && gunicorn eventcalendar.wsgi:application --bind 0.0.0.0:8000"
+      sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn eventcalendar.wsgi:application --bind 0.0.0.0:8000"
 
     ports:
       - "8001:8000"  # Порт для доступа из интернета

@@ -10,23 +10,29 @@ class TrainerForm(forms.ModelForm):
     qualification = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}))
     achievements = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'class': 'form-control auto-expand'}),
                                    required=False)
+    # Переопределяем поле photo
+    photo = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'custom-file-input'})
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:  # Если это обновление, заполняем поле directions
             self.fields['direction'].initial = self.instance.direction.all()
         for field_name, field in self.fields.items():
-            if 'class' not in field.widget.attrs:
+            if field_name != 'photo' and 'class' not in field.widget.attrs:
                 field.widget.attrs['class'] = 'form-control'
 
         self.fields['name'].label = "ФИО"
         self.fields['qualification'].label = "Квалификация"
         self.fields['achievements'].label = "Достижения"
         self.fields['direction'].label = "Направление"
+        self.fields['photo'].label = "Фото"
 
     class Meta:
         model = Trainer
-        fields = '__all__'
+        fields = ['name', 'direction', 'qualification', 'achievements', 'photo']
         widgets = {
             'direction': Select2MultipleWidget,
         }
